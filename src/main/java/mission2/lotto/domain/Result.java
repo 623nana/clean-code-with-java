@@ -1,0 +1,49 @@
+package mission2.lotto.domain;
+
+import java.util.HashMap;
+import mission2.lotto.constant.Constant;
+
+public class Result {
+
+  private static HashMap<Hit, Integer> resultMap;
+
+  public Result() {
+    resultMap = new HashMap<>();
+    init();
+  }
+
+  public void init() {
+    for (Hit hit : Hit.values()) {
+      resultMap.put(hit, 0);
+    }
+  }
+
+  public void update(Hit hit) {
+    resultMap.put(hit, resultMap.get(hit) + 1);
+  }
+
+  public Integer getResult(Hit hit) {
+    return resultMap.get(hit);
+  }
+
+  public double getRatio(Amount amount) {
+    double profit = getProfit();
+    return calcRatio(profit, amount.getPrice());
+  }
+
+  private double calcRatio(double profit, int price) {
+    return (profit / price);
+  }
+
+  private double getProfit() {
+    double profit = 0;
+    for (Hit hit : Hit.values()) {
+      profit += resultMap.get(hit) * hit.prize();
+    }
+    return profit;
+  }
+
+  public boolean isProfit(double ratio) {
+    return ratio >= Constant.STANDARD_OF_PROFIT;
+  }
+}
